@@ -8,11 +8,19 @@
     <title>BSc in the Internet of Things</title>
 </head>
 
-<body class="ui container">
-<%- partial("includes/_header.ejs") %>
-<%- partial("includes/_summary.ejs") %>
-<%- partial("includes/_curriculum.ejs") %>
-<%- partial("includes/_sponsors.ejs") %>
-<%- partial("includes/_footer.ejs") %>
+<body>
+<section class="ui container">
+    <%- partial("includes/_header.ejs") %>
+</section>
+<section class="banner">
+    <section class="ui banner">
+        <%- partial("includes/_summary.ejs") %>
+    </section>
+</section>
+<section class="ui container">
+    <%- partial("includes/_curriculum.ejs") %>
+    <%- partial("includes/_sponsors.ejs") %>
+    <%- partial("includes/_footer.ejs") %>
+</section>
 </body>
 </html>
