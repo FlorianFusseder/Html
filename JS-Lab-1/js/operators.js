@@ -1,7 +1,6 @@
-'LF'
 function createBar() {
   return 44;
-};
+}
 
 function doSomething(foo) {
   console.log(foo);

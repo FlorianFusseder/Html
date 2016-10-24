@@ -1,6 +1,4 @@
-/**
- * Created by Florian on 24.10.2016.
- */
+// Creating an object with the object literal syntax:
 const person2 = {
   firstName: 'Jane',
   lastName: 'Doe',
