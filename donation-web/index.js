@@ -1,14 +1,10 @@
 'use strict';
 
 const Hapi = require('hapi');
+require('./app/models/db');
 
 var server = new Hapi.Server();
 server.connection({ port: process.env.PORT || 4000 });
-
-server.bind({
-  users: {},
-  donations: [],
-});
 
 server.register([require('inert'), require('vision'), require('hapi-auth-cookie')], err => {
 
