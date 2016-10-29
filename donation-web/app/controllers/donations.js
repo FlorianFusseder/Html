@@ -8,17 +8,13 @@ exports.home = {
 
 };
 
-exports.report = {
-
-  handler: function (request, reply) {
-    reply.view('report', { title: 'Donations to Date', });
-  },
-
-};
-
 exports.donate = {
 
   handler: function (request, reply) {
+    let data = request.payload;
+    var donorEmail = request.auth.credentials.loggedInUser;
+    data.donor = this.users[donorEmail];
+    this.donations.push(data);
     reply.redirect('/report');
   },
 
@@ -31,16 +27,6 @@ exports.report = {
       title: 'Donations to Date',
       donations: this.donations,
     });
-  },
-
-};
-
-exports.donate = {
-
-  handler: function (request, reply) {
-    const data = request.payload;
-    this.donations.push(data);
-    reply.redirect('/report');
   },
 
 };
