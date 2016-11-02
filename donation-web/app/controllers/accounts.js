@@ -1,6 +1,7 @@
 'use strict';
 
 const User = require('../models/user');
+const Joi = require('joi');
 
 exports.main = {
   auth: false,
@@ -28,6 +29,25 @@ exports.login = {
 
 exports.authenticate = {
   auth: false,
+
+  validate: {
+    payload: {
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).max(25),
+    },
+
+    options: {
+      abortEarly: false,
+    },
+
+    failAction: function (request, reply, source, error) {
+      reply.view('login', {
+        title: 'login error',
+        errors: error.data.details,
+      }).code(400);
+    },
+  },
+
   handler: function (request, reply) {
     const user = request.payload;
     User.findOne({ email: user.email }).then(foundUser => {
@@ -38,8 +58,45 @@ exports.authenticate = {
         });
         reply.redirect('/home');
       } else {
-        reply.redirect('/signup');
+        reply.redirect('/login');
       }
+    }).catch(err => {
+      reply.redirect('/');
+    });
+  },
+
+};
+
+exports.register = {
+  auth: false,
+
+  validate: {
+
+    payload: {
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    },
+
+    options: {
+      abortEarly: false,
+    },
+
+    failAction: function (request, reply, source, error) {
+      reply.view('signup', {
+        title: 'Sign up error',
+        errors: error.data.details,
+      }).code(400);
+    },
+
+  },
+
+  handler: function (request, reply) {
+    const user = new User(request.payload);
+
+    user.save().then(newUser => {
+      reply.redirect('/login');
     }).catch(err => {
       reply.redirect('/');
     });
@@ -69,6 +126,29 @@ exports.viewSettings = {
 
 exports.updateSettings = {
 
+  validate: {
+
+    payload: {
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    },
+
+    options: {
+      abortEarly: false,
+    },
+
+    failAction: function (request, reply, source, error) {
+
+      reply.view('settings', {
+        title: 'Edit Account Settings',
+        errors: error.data.details,
+      }).code(400);
+    },
+
+  },
+
   handler: function (request, reply) {
     const editedUser = request.payload;
     const loggedInUserEmail = request.auth.credentials.loggedInUser;
@@ -86,17 +166,4 @@ exports.updateSettings = {
       reply.view('settings', { title: 'Edit Account Settings', user: user });
     });
   },
-};
-
-exports.register = {
-  auth: false,
-  handler: function (request, reply) {
-    const user = new User(request.payload);
-    user.save().then(newUser => {
-      reply.redirect('/login');
-    }).catch(err => {
-      reply.redirect('/');
-    });
-  },
-
 };
