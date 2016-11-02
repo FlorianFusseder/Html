@@ -79,15 +79,13 @@ exports.updateSettings = {
       user.password = editedUser.password;
       return user.save();
     }).then(user => {
+      request.cookieAuth.set({
+        loggedIn: true,
+        loggedInUser: editedUser.email,
+      });
       reply.view('settings', { title: 'Edit Account Settings', user: user });
     });
-    request.cookieAuth.set({
-      loggedIn: true,
-      loggedInUser: editedUser.email,
-    });
-    reply.redirect('/settings');
   },
-
 };
 
 exports.register = {
